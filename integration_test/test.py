@@ -1,4 +1,6 @@
 import subprocess
+import requests
+import time
 
 class SafePopen:
     def __init__(self, *args, **kwargs):
@@ -12,4 +14,17 @@ class SafePopen:
 
 
 with SafePopen("python -m nearest_neighbors_db.start_server integration_test/test_embeddings.json 3".split()) as proc1:
-    pass
+    # wait for server to open
+    time.sleep(1.5)
+
+    good_request = requests.request(
+        "get",
+        "http://127.0.0.1:8804/ranking",
+        json={
+            "query":"AAAAAAAA8D8AAAAAAAAAAAAAAAAAAPg/",
+            "start_rank": 0,
+            "end_rank": 10,
+            "comparitor": "cosine"
+        }
+    )
+    assert good_request.json()['type'] == "SUCCESS"

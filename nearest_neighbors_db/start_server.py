@@ -2,6 +2,7 @@ import argparse
 from .utils.load_dataset import hex64_dataset_to_ndarray
 from . import app
 import json
+from . import rest_fns
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Nearest neighbors database server.")
@@ -13,7 +14,8 @@ if __name__ == "__main__":
         raw_dataset = json.load(datafile)
     keys, values = hex64_dataset_to_ndarray(raw_dataset, args.vector_len)
     app.config.update(
-        keys=keys,
-        values=values
+        KEYS=keys,
+        VALUES=values,
+        VECTOR_LEN=args.vector_len
     )
     app.run(port=8804, debug=False)
