@@ -28,3 +28,24 @@ with SafePopen("python -m nearest_neighbors_db.start_server integration_test/tes
         }
     )
     assert good_request.json()['type'] == "SUCCESS"
+    bad_request = requests.request(
+        "get",
+        "http://127.0.0.1:8804/ranking",
+        json={
+            "query":"AAAAAAAA8D8AAAAAAAAAAAAAAAAAAPg/",
+            "start_rank": 0,
+            "end_rank": 10,
+        }
+    )
+    assert bad_request.json()['type'] == "FORMAT_ERROR"
+    dataset_size = requests.request(
+        "get",
+        "http://127.0.0.1:8804/dataset_size"
+    )
+    assert dataset_size.json() == {
+        "type": "SUCCESS",
+        "size": 2,
+    }
+
+
+print("All tests passed!")

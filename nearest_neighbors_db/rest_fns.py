@@ -49,6 +49,6 @@ def get_dataset_size():
     return json.dumps(
         {
             "type": "SUCCESS",
-            "size": len(app.config.keys),
+            "size": len(app.config['KEYS']),
         }
     )
