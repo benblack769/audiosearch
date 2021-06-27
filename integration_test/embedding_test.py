@@ -1,6 +1,7 @@
 import subprocess
 import requests
 import time
+import os
 
 class SafePopen:
     def __init__(self, *args, **kwargs):
@@ -12,10 +13,12 @@ class SafePopen:
     def __exit__(self, type, value, traceback):
         self.proc.kill()
 
+os.environ['EMBED_WEIGHTS'] = "integration_test/weights/"
+os.environ['EMBED_CONFIG'] = "integration_test/train_opt.yaml"
 
-with SafePopen("python embedding_service/server.py integration_test/weights/ integration_test/train_opt.yaml".split()) as proc1:
+with SafePopen("python embedding_service/server.py".split()) as proc1:
     # wait for server to open
-    time.sleep(7)
+    time.sleep(10)
 
     good_request = requests.request(
         "get",

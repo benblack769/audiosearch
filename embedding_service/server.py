@@ -10,6 +10,7 @@ import base64
 from flask import request
 import urllib.request
 import shutil
+import os
 
 
 app = Flask(__name__)
@@ -70,16 +71,11 @@ def get_embedding():
     )
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Service which converts a .mp3 or .wav encoded sound file and embeds it on demand")
-    parser.add_argument('weights', help='Paths to trained model weights folder (saved automatically during model training in the `weights` folder)')
-    parser.add_argument('config_file', help='path to sound-eval config file used to train the model')
+    weights_path = os.environ['EMBED_WEIGHTS']
+    config_filename = os.environ['EMBED_CONFIG']
 
-    args = parser.parse_args()
-
-    with open(args.config_file) as config_file:
+    with open(config_filename) as config_file:
         config = yaml.safe_load(config_file)
-
-    weights_path = args.weights
 
     app.config.update(**config)
     app.config['WEIGHTS_PATH'] = weights_path

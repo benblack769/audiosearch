@@ -1,6 +1,8 @@
 import subprocess
 import requests
 import time
+import os
+
 
 class SafePopen:
     def __init__(self, *args, **kwargs):
@@ -12,10 +14,12 @@ class SafePopen:
     def __exit__(self, type, value, traceback):
         self.proc.kill()
 
+os.environ['NN_EMBEDDING_DATASET'] = "integration_test/test_embeddings.json"
+os.environ['NN_EMBEDDING_LENGTH'] = "3"
 
-with SafePopen("python -m nearest_neighbors_db.start_server integration_test/test_embeddings.json 3".split()) as proc1:
+with SafePopen("python -m nearest_neighbors_db.start_server".split()) as proc1:
     # wait for server to open
-    time.sleep(1.5)
+    time.sleep(3.5)
 
     good_request = requests.request(
         "get",
