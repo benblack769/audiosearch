@@ -13,10 +13,9 @@ Method:
 ### Search API:
 
 * Get audio mp3 by audio ID
-* Search initiate (Post)
-	* Generates new search ID
-    * Can happen as page loads, no need for user to wait for this to complete to start filling out form, only for form to be successfully sent.
-* Update search criterion
+* Upload audio
+
+* Submit search criterion
     * Selects learned model from list
     * Selects any metadata filters
         * dataset name
