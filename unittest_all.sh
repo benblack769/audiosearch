@@ -1,1 +1,1 @@
-pytest nearest_neighbors_db embedding_service/audio_utils
+pytest nearest_neighbors_db embedding_service/audio_utils embedding_service/embed_utils temp_db/utils
