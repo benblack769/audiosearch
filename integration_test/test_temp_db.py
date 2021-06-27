@@ -15,7 +15,7 @@ class SafePopen:
 
 with SafePopen("python temp_db/server.py".split()) as proc1:
     # wait for server to open
-    time.sleep(3)
+    time.sleep(5)
 
     good_request = requests.request(
         "post",
@@ -26,5 +26,13 @@ with SafePopen("python temp_db/server.py".split()) as proc1:
     )
     request_result = good_request.json()
     assert request_result['type'] == "SUCCESS"
-    
+    id = request_result['id']
+    good_download_request = requests.request(
+        "get",
+        "http://127.0.0.1:8604/download/"+id
+    )
+    print(good_download_request.content)
+    assert len(good_download_request.content) > 1000
+
+
 print("all tests passed")
