@@ -1,2 +1,4 @@
 numpy
 requests
+tensorflow==1.15
+soundfile
