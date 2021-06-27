@@ -31,7 +31,7 @@ def get_ranking():
         return json.dumps(
             {
                 "type": "FORMAT_ERROR",
-                "message": str(e),
+                "message": repr(e),
             }
         )
 
