@@ -15,31 +15,11 @@ Method:
 * Get audio mp3 by audio ID
 * Upload audio
 
-* Submit search criterion
-    * Selects learned model from list
-    * Selects any metadata filters
-        * dataset name
-        * author
-        * title
-* Upload audio mp3 for search
-    * Inputs:
-        * Search ID
-        * audio mp3 file
-    * Returns
-        * Audio ID
-* Set weight of audio ID in search
-    * Inputs:
-        * Search ID
-        * audio ID
-        * weight
-* Get current ranking
-    * Inputs:
-        * Search ID
-    * Returns
-        * List of
-            * Audio ID
-* Get current search criterion/weights
-* Automatically deletes search, uploaded audio IDs when search expires
+* Submit search
+    * Selects learned model/comparator/other filters from list
+    * Submits audio URL and weight
+    * Gets back ranked audio files
+* Get search options
 
 ### Embedding service API
 
@@ -51,13 +31,12 @@ Method:
 * Add key with value
 * Query key
 
-### Audio DB
+### Temp DB
 
-* Private API
-    * Add audio file/metadata return ID
-* Public API
-    * Get file via ID
-    * Get metadata
+* Upload file
+* Download file
+
+File will expire and be deleted after a certain length of time.
 
 ### Phase 1: Static database
 
