@@ -19,7 +19,7 @@ assert len(new_dataframe.index) == len(track_data.index)
 datas = json.loads(new_dataframe.to_json(orient="records"))
 new_datas = []
 for vec, data in zip(vectors, datas):
-    bytes = base64.b64encode(vec.tobytes()).decode("utf-8")
+    bytes = base64.b64encode(vec.astype("float64").tobytes()).decode("utf-8")
     new_entry = {
         "key": bytes,
         "value": data,
