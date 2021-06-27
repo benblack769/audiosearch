@@ -1,1 +1,1 @@
-pytest nearest_neighbors_db
+pytest nearest_neighbors_db embedding_service/audio_utils
