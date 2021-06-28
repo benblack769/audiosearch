@@ -10,13 +10,14 @@ The following diagram summarizes the high level interactions between the service
 
 ![](diagrams/high_level_design.svg)
 
-## APIs
 
-### Embedding API
+## Embedding Service
 
 The embedding service performs expensive file processing to turn an audio file in an mp3 format into an embedding useful for search.
 
 Since its goal is to take the compute burden off of the search service, its input is a url, not the whole file contents.
+
+### API
 
 #### /embedding (get request)
 
@@ -44,7 +45,7 @@ Failure modes:
 * `"URL_ERROR"`: Url does not resolve to a file.
 
 
-### Nearest Neighbors DB API
+## Nearest Neighbors DB
 
 Most databases are keyed on discrete values, and return exact matches. In the nearest neighbors DB, the key is a continuous value in a high dimentional space (dozens to hundreds of dimensions), given some comparator metric.
 
@@ -54,6 +55,8 @@ The problem with this database is that there is no general way of doing better t
 This means that in the long term, horizontal scaling, perhaps across GPUs, will be needed to maintain performance of the database as the number of entries and requests grow.
 
 Currently only get requests are supported. In the future, post requests to update the database will also be supported.
+
+### API
 
 #### /ranking (get request)
 
@@ -113,11 +116,13 @@ Input:
 }
 ```
 
-### Search API
+## Search service
 
 The search API is a light wrapper over the previous two APIs which provides a reasonable search interface for a frontend.
 
 Note that unusually, instead of just taking in a single file as a search, this API takes in multiple files, as well as use defined weights, and performs a weighted averaging over the query vector to create the embedding.
+
+### API
 
 #### /submit (get request)
 
@@ -133,7 +138,7 @@ Input:
 }
 ```
 
-Returns:
+Response on success:
 
 ```
 {
@@ -152,6 +157,39 @@ Assumptions:
 * URLs and weights must be of same length
 * URLs must point to valid mp3 files
 * Values in nearest neighbor DB must all be json data that contain a `url` field that points to the location of a mp3 file.
+
+## Temp DB
+
+This service provides a convenient location for a frontend to upload mp3 files so that the embedding DB can access those files. Files are deleted if they are more than 1 hour old.
+
+### API
+
+#### /upload (post request)
+
+Input:
+
+Takes in a file via the typical http protocol.
+
+File must be under 20MB
+
+Response:
+
+```
+{
+    "type": "SUCCESS",
+    "id": <unique file ID, required to download file>
+}
+```
+
+#### /download/<file_id> (get request)
+
+Gets the file associated with file_id.
+
+## Testing
+
+All four services have an integration test in the `integration_test` folder which makes simple calls to their REST API and checks the response. Run `bash integration_test_all.sh` to run all the integration tests.
+
+The embedding service, nearest_neighbors_db, and temp db have unit tests which cover some of the more complex logic of their implementation. Run `bash unittest_all.sh` to run all the unit tests.
 
 ## Future plans
 
