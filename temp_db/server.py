@@ -12,9 +12,12 @@ import base64
 import os
 import re
 from utils.clear_old_files import get_files_to_clear
+from flask_cors import CORS
 
 
 app = Flask(__name__)
+CORS(app)
+
 
 @app.route("/download/<file_id>", methods=["GET"])
 def download_file(file_id):
@@ -27,26 +30,27 @@ def download_file(file_id):
 
 @app.route("/upload", methods=["POST"])
 def upload_file():
-    if 'file' not in request.files:
-        return json.dumps(
-            {
-                "type": "BAD_REQUEST_FORMAT",
-            }
-        )
+    # if 'file' not in request.files:
+    #     return json.dumps(
+    #         {
+    #             "type": "BAD_REQUEST_FORMAT",
+    #         }
+    #     )
 
     file = request.files['file']
     # If the user does not select a file, the browser submits an
     # empty file without a filename.
-    if file.filename == '':
-        return json.dumps(
-            {
-                "type": "NO_FILE",
-            }
-        )
+    # if file.filename == '':
+    #     return json.dumps(
+    #         {
+    #             "type": "NO_FILE",
+    #         }
+    #     )
     _, extension = os.path.splitext(file.filename)
 
     # clears old files
-    files_to_remove = get_files_to_clear(app.config["AUDIO_FOLDER"], app.config['TEMPFILE_TIMEOUT'])
+    abs_path = os.path.join(app.root_path, app.config['AUDIO_FOLDER'])
+    files_to_remove = get_files_to_clear(abs_path, app.config['TEMPFILE_TIMEOUT'])
     for path in files_to_remove:
         os.remove(path)
 

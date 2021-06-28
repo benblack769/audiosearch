@@ -12,9 +12,12 @@ import base64
 import os
 import numpy as np
 import re
+from flask_cors import CORS
 
 
 app = Flask(__name__)
+CORS(app)
+
 
 def get_query(urls, weights):
     if len(urls) != len(weights) or len(urls) < 1:
@@ -46,13 +49,15 @@ def get_ranking(query, start_rank, end_rank, comparator):
     print(response.content)
     return response.json()['values']
 
-@app.route("/submit", methods=["GET"])
+@app.route("/submit", methods=["POST"])
 def upload_file():
-    start_rank = int(request.form.get("start_rank"))
-    end_rank = int(request.form.get("end_rank"))
-    comparator = request.form.get("comparator")
-    urls = request.form.getlist('urls')
-    weights = [float(w) for w in request.form.getlist('weights')]
+    print(request.get_data())
+    response_data = json.loads(request.get_data())
+    start_rank = int(response_data.get("start_rank"))
+    end_rank = int(response_data.get("end_rank"))
+    comparator = response_data.get("comparator")
+    urls = response_data.get('urls')
+    weights = [float(w) for w in response_data.get('weights')]
     query = get_query(
         urls,
         weights,

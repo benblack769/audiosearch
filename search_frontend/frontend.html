@@ -1,0 +1,102 @@
+<script
+  src="http://code.jquery.com/jquery-3.6.0.js"
+  integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+  crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/dropzone.js" integrity="sha512-4p9OjnfBk18Aavg91853yEZCA7ywJYcZpFt+YB+p+gLNPFIAlt2zMBGzTxREYh+sHFsttK0CTYephWaY7I3Wbw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/dropzone-amd-module.js" integrity="sha512-4p9OjnfBk18Aavg91853yEZCA7ywJYcZpFt+YB+p+gLNPFIAlt2zMBGzTxREYh+sHFsttK0CTYephWaY7I3Wbw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/basic.css" integrity="sha512-+Vla3mZvC+lQdBu1SKhXLCbzoNCl0hQ8GtCK8+4gOJS/PN9TTn0AO6SxlpX8p+5Zoumf1vXFyMlhpQtVD5+eSw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/dropzone.css" integrity="sha512-7uSoC3grlnRktCWoO4LjHMjotq8gf9XDFQerPuaph+cqR7JC9XKGdvN+UwZMC14aAaBDItdRj3DcSDs4kMWUgg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script>
+
+    Dropzone.addRemoveLinks = true;
+</script>
+<form action="http://127.0.0.1:8604/upload"
+      class="dropzone"
+      id="dropzoneform"></form>
+
+<div id="results">
+
+</div>
+<script>
+  // var ele =document.getElementById("my-awesome-dropzone");
+  // function form_submit_callback(){
+  //
+  // }
+  // if(ele.addEventListener){
+  //     ele.addEventListener("submit", form_submit_callback, false);
+  // }
+
+
+function make_citation(item){
+    return "'"+item['track_title']+"' by "+item['artist_name']+" under the "+ item['license_title']+" license. "+" Made avaliable through www.freemusicarchive.org"
+}
+function make_result_element_html(item){
+    return(
+    '<div>'+
+        "<audio controls>"+
+          '<source id="audio_source" src="'+item['url']+'" type="audio/mpeg">'+
+        "</audio>"+
+        "<i>"+make_citation(item)+"</i>"+
+    "</div>")
+}
+function make_all_elements(ranked_values){
+    console.log(ranked_values.map(make_result_element_html))
+    console.log(ranked_values.map(make_result_element_html).join("\n"))
+    return ranked_values.map(make_result_element_html).join("\n")
+}
+function set_elements(element_data){
+    for(var i = 0; i < element_data.length; i++){
+        element_data[i]['rank'] = i
+    }
+    var parent = document.getElementById("results")
+    parent.innerHTML = make_all_elements(element_data)
+}
+function fetch_ranking(){
+    var url_list = Array.from(url_set);
+    const data = JSON.stringify(
+    {
+        "urls": url_list,
+        "weights": url_list.map(x => 1.),
+        "start_rank": 0,
+        "end_rank": 5,
+        "comparator": "cosine",
+    });
+
+    const request = new XMLHttpRequest();
+
+    request.addEventListener('load', function () {
+      if (this.readyState === 4 && this.status === 200) {
+        var data = JSON.parse(this.responseText);
+        var ranking = data['ranked']
+          console.log(ranking);
+         set_elements(ranking)
+      }
+    });
+
+    request.open('POST', 'http://127.0.0.1:8504/submit', true);
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+    request.send(data);
+}
+var url_set = new Set()
+Dropzone.options.dropzoneform = {
+addRemoveLinks: true,
+acceptedFiles: "audio/mpeg",
+init: function() {
+    this.on("removedfile", function(file){
+        if(file._server_name){
+            url_set.delete(file._server_name)
+        }
+        console.log(url_set)
+        fetch_ranking()
+    })
+    this.on("success", function(file, response){
+        response = JSON.parse(response)
+        var new_url = "http://127.0.0.1:8604/download/" + response['id']
+        file._server_name = new_url
+        url_set.add(new_url)
+        console.log(url_set)
+        fetch_ranking()
+    })
+}
+}
+</script>
