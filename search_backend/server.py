@@ -16,12 +16,6 @@ import re
 
 app = Flask(__name__)
 
-@app.route("/options", methods=["GET"])
-def get_options():
-    return json.dumps({
-
-    })
-
 def get_query(urls, weights):
     if len(urls) != len(weights) or len(urls) < 1:
         raise ValueError("urls and weights must have equal lengths")
