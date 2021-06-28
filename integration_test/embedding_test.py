@@ -16,7 +16,9 @@ class SafePopen:
 os.environ['EMBED_WEIGHTS'] = "integration_test/weights/"
 os.environ['EMBED_CONFIG'] = "integration_test/train_opt.yaml"
 
-with SafePopen("python embedding_service/server.py".split()) as proc1:
+with SafePopen("python embedding_service/server.py".split()) as proc1, \
+     SafePopen("python -m http.server".split()) as proc2:
+
     # wait for server to open
     time.sleep(10)
 
@@ -24,7 +26,7 @@ with SafePopen("python embedding_service/server.py".split()) as proc1:
         "get",
         "http://127.0.0.1:8704/embedding",
         json={
-            "url":"http://s3-us-west-2.amazonaws.com/fma-dataset-embeddings/mp3_files/020/020373.mp3",
+            "url":"http://127.0.0.1:8000/integration_test/test.mp3",
         }
     )
     assert good_request.json()['type'] == "SUCCESS"

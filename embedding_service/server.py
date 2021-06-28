@@ -61,7 +61,7 @@ def get_embedding():
             }
         )
 
-    embedding_text = base64.b64encode(out_embedding.tobytes()).decode("utf-8")
+    embedding_text = base64.b64encode(out_embedding.astype("float64").tobytes()).decode("utf-8")
     return json.dumps(
         {
             "type": "SUCCESS",

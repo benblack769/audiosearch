@@ -15,15 +15,15 @@ def get_ranking():
         query = response_data["query"]
         start_idx = int(response_data["start_rank"])
         end_idx = int(response_data["end_rank"])
-        comparitor = response_data["comparitor"]
+        comparator = response_data["comparator"]
 
         query_vec = hex64_to_ndarray(query, app.config['VECTOR_LEN'])
 
         keys = app.config['KEYS']
         values = app.config['VALUES']
-        metric = compute_metric(keys, query_vec, comparitor)
+        metric = compute_metric(keys, query_vec, comparator)
         ranking = np.argsort(metric)
-        indicies = ranking[start_idx:max(end_idx, len(ranking))]
+        indicies = ranking[start_idx:min(end_idx, len(ranking))]
         selected_values = [values[i] for i in indicies]
 
     except (ValueError, KeyError, json.decoder.JSONDecodeError) as e:

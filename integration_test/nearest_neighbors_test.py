@@ -28,7 +28,7 @@ with SafePopen("python -m nearest_neighbors_db.start_server".split()) as proc1:
             "query":"AAAAAAAA8D8AAAAAAAAAAAAAAAAAAPg/",
             "start_rank": 0,
             "end_rank": 10,
-            "comparitor": "cosine"
+            "comparator": "cosine"
         }
     )
     assert good_request.json()['type'] == "SUCCESS"
