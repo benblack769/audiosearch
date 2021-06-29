@@ -21,6 +21,8 @@ python process_fma_metadata.py
 python spectrify_all.py data/fma_small/ data/fma_vecs/ --config=configs/train_opt.yaml
 # train model, generate vectors. Requires manual interrupt, probably should wait around 1 hour to train
 python spectrogram_doc2vec.py  data/fma_vecs/ data/fma_outs/ --config=configs/train_opt.yaml
+python calc_all_vecs.py data/fma_vecs/ data/fma_outs/ data/fma_word_vecs
+python gather_computed.py data/fma_word_vecs/ data/fma_outs/music_list.txt data/final_word_vecs.npy
 # create json dataset for nearest neighbors DB to encode
 python create_json_dataset.py
 cp data/learned_dataset.json ..
