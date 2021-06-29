@@ -22,6 +22,9 @@ When you drag and drop an mp3 file into the box, it automatically initiates a se
 
 ![](diagrams/final.PNG)
 
+Demo can be easily deployed by running the `run_demo.sh` script. This creates a split tmux window with all the services running in parallel.
+
+
 ## Install
 
 Requires `gcc` to compile pip packages. Requires `libsndfile` and `ffmpeg` for audio processing. The run_servers.sh script requires `tmux` as well. After these are installed you can install the python packages with:s
@@ -36,6 +39,19 @@ All four services have an integration test in the `integration_test` folder whic
 
 The embedding service, nearest_neighbors_db, and temp db have unit tests which cover some of the more complex logic of their implementation. Run `bash unittest_all.sh` to run all the unit tests.
 
+# Service descriptions
+
+## Weaknesses/TODOs
+
+Unfortunately, this project was a bit ambitious for the time frame I had to do it. If I were to continue working on it, the first additions I would make are:
+
+* More detailed/carefully handled failure scenarios.
+* More unit testing of embedding service code
+* More comprehensive integration testing, especially of failure scenarios.
+* Run demo on production server, instead of Flask's development server.
+* Paged results in frontend. Ability to set search weights in frontend.
+
+More ambitious changes are at the end of this readme in "future plans".
 
 ## Embedding Service
 
