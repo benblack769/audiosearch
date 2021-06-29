@@ -4,4 +4,6 @@ tensorflow==1.15
 soundfile
 pyyaml
 uwsgi
+flask
 flask_cors
+pytest

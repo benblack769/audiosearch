@@ -10,6 +10,32 @@ The following diagram summarizes the high level interactions between the service
 
 ![](diagrams/high_level_design.svg)
 
+## Deployed demo
+
+Demo is currently deployed at http://54.87.43.69:8000/frontend.html
+
+When the page loads, it looks like:
+
+![](diagrams/initial.PNG)
+
+When you drag and drop an mp3 file into the box, it automatically initiates a search and displays the top 5 matches
+
+![](diagrams/final.PNG)
+
+## Install
+
+Requires `gcc` to compile pip packages. Requires `libsndfile` and `ffmpeg` for audio processing. The run_servers.sh script requires `tmux` as well. After these are installed you can install the python packages with:s
+
+```
+pip install -r requirements.txt
+```
+
+## Testing
+
+All four services have an integration test in the `integration_test` folder which makes simple calls to their REST API and checks the response. Run `bash integration_test_all.sh` to run all the integration tests.
+
+The embedding service, nearest_neighbors_db, and temp db have unit tests which cover some of the more complex logic of their implementation. Run `bash unittest_all.sh` to run all the unit tests.
+
 
 ## Embedding Service
 
@@ -185,11 +211,6 @@ Response:
 
 Gets the file associated with file_id.
 
-## Testing
-
-All four services have an integration test in the `integration_test` folder which makes simple calls to their REST API and checks the response. Run `bash integration_test_all.sh` to run all the integration tests.
-
-The embedding service, nearest_neighbors_db, and temp db have unit tests which cover some of the more complex logic of their implementation. Run `bash unittest_all.sh` to run all the unit tests.
 
 ## Future plans
 

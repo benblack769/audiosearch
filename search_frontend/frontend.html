@@ -10,7 +10,7 @@
 
     Dropzone.addRemoveLinks = true;
 </script>
-<form action="http://127.0.0.1:8604/upload"
+<form action=""
       class="dropzone"
       id="dropzoneform"></form>
 
@@ -81,6 +81,8 @@ var url_set = new Set()
 Dropzone.options.dropzoneform = {
 addRemoveLinks: true,
 acceptedFiles: "audio/mpeg",
+dictDefaultMessage: 'Drop mp3 file here (or click) to initiate search',
+url: "http://127.0.0.1:8604/upload",
 init: function() {
     this.on("removedfile", function(file){
         if(file._server_name){
