@@ -1,6 +1,6 @@
 # AudioSearch
 
-An audio search engine based off comparing embeddings computed with contrastive learning methods. See [this old writeup](https://benblack769.github.io/posts/projects/sound-eval/) if you are curious about the details.
+An audio search engine based off comparing embeddings computed with contrastive learning methods. See [this old writeup of mine](https://benblack769.github.io/posts/projects/sound-eval/) if you are curious about the details. Note that significant parts of the code, especially in the `embedding_service` folder, are copied directly from that codebase. Other resources I used are in [resources_used.md](resources_used.md)
 
 AudioSearch is built on a microservice based architecture. There are three core services and a helper service. The Embedding service is a pure compute service that takes in an mp3 audio url and returns its embedding (computed with pretrained weights). The nearest neighbors database is a specialized database service that takes in an embedding and finds the closest entries in the database. Finally, the search service uses the other two services, taking in multiple audio files and finding the nearest result to the center of the group of files. Allowing multiple files for search potentially increases the fidelity of the search, allowing the user to find obscure results with greater reliability.
 
