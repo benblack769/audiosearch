@@ -10,9 +10,8 @@ The following diagram summarizes the high level interactions between the service
 
 ![](diagrams/high_level_design.svg)
 
-## Deployed demo
+## What the frontend looks like
 
-Demo is currently deployed at http://54.87.43.69:8000/frontend.html
 
 When the page loads, it looks like:
 
